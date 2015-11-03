@@ -10,7 +10,7 @@
 - name: Configure PHP-FPM
   template:
     src: php-fpm.conf.j2
-    dest: /etc/php-fpm.conf
+    dest: "{{ php_fpm_conf }}"
     owner: root
     group: root
   notify:

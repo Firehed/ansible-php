@@ -1,8 +1,6 @@
 ---
 php_version: php56
 
-php_fpm_listen: /var/run/php-fpm.sock # Alternately, 127.0.0.1:9000
-
 php_packages:
   - fpm
   - pdo
@@ -10,3 +8,15 @@ php_packages:
   - cli
   - mcrypt
   - common
+
+php_log: syslog
+php_log_level: E_ALL
+php_timezone: UTC
+php_fpm_listen: /var/run/php-fpm.sock # Alternately, 127.0.0.1:9000
+php_fpm_log: syslog
+php_fpm_log_level: notice # alert, error, warning, notice, debug
+
+# File locations, you probably won't need to change these
+php_ini: /etc/php.ini
+php_config_directory: /etc/php.d
+php_fpm_conf: /etc/php-fpm.conf
