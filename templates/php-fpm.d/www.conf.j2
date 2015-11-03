@@ -1,0 +1,22 @@
+; {{ ansible_managed }}
+
+[www]
+listen = {{ php_fpm_listen }}
+listen.allowed_clients = 127.0.0.1
+listen.owner = {{ php_fpm_user }}
+listen.group = {{ php_fpm_group }}
+listen.mode = 0666
+listen.backlog = 65536
+user = {{ php_fpm_user }}
+group = {{ php_fpm_group }}
+request_slowlog_timeout = 0s
+catch_workers_output = yes
+
+pm = dynamic
+pm.max_children = 50
+pm.start_servers = 5
+pm.min_spare_servers = 5
+pm.max_spare_servers = 35
+pm.max_requests = 500
+pm.status_path = /php_status
+

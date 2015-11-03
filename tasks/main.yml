@@ -1,0 +1,41 @@
+---
+- name: Add package manager vars
+  include_vars: "{{ ansible_pkg_mgr }}.yml"
+
+- name: Install Webtatic Repo
+  yum:
+    name: https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+    state: installed
+
+
+- name: Install PHP Main Package
+  yum:
+    name: "{{ php_package_names[php_version] }}"
+    state: installed
+    enablerepo: webtatic-testing
+  notify:
+    - Reload PHP-FPM
+
+# Workaround for a bug in how names are concatenated for optimization in Yum
+# module. Something like `name: "{{ php_version }}-{{ item }}`/`with_items: []`
+# will produce `yum install $php_version-item[0] item[1] item[2]` instead of
+# applying the format string to each item individually and then concatenating
+# the list as an optimization.
+- set_fact:
+    actual_packages: "{{ php_package_names[php_version] }}-{{ php_packages | join(',{{ php_package_names[php_version] }}-')}}"
+  when: php_packages
+
+
+- name: Install Additional PHP Packages
+  yum:
+    name: "{{ actual_packages }}"
+    state: installed
+    enablerepo: webtatic-testing
+  when: php_packages
+  notify:
+    - Reload PHP-FPM
+
+# Because FPM is a service rather than just a PHP extension, we handle all of
+# its configuration separately.
+- include: php-fpm.yml
+  when: '"fpm" in php_packages'

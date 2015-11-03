@@ -1,0 +1,6 @@
+---
+- name: Reload PHP-FPM
+  service:
+    name: php-fpm
+    state: reloaded
+  when: '"fpm" in php_packages'

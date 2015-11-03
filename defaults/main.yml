@@ -1,0 +1,12 @@
+---
+php_version: php56
+
+php_fpm_listen: /var/run/php-fpm.sock # Alternately, 127.0.0.1:9000
+
+php_packages:
+  - fpm
+  - pdo
+  - opcache
+  - cli
+  - mcrypt
+  - common

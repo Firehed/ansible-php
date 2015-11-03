@@ -1,0 +1,37 @@
+---
+# PHP-FPM specific configuration
+
+- name: Check variables
+  assert:
+    that:
+      - php_fpm_user is defined
+      - php_fpm_group is defined
+
+- name: Configure PHP-FPM
+  template:
+    src: php-fpm.conf.j2
+    dest: /etc/php-fpm.conf
+    owner: root
+    group: root
+  notify:
+    - Reload PHP-FPM
+
+- name: Configure PHP-FPM Pools
+  template:
+    src: php-fpm.d/www.conf.j2
+    dest: /etc/php-fpm.d/www.conf
+    owner: root
+    group: root
+  notify:
+    - Reload PHP-FPM
+
+- name: Start PHP-FPM on boot
+  service:
+    name: php-fpm
+    enabled: yes
+
+- name: Launch PHP-FPM
+  service:
+    name: php-fpm
+    state: started
+
